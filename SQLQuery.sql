@@ -1,5 +1,53 @@
-USE BDlabs;
+CREATE DATABASE lab1;
+USE lab1;
 
+CREATE TABLE Disciplines
+(IDDiscipline INT IDENTITY
+	CONSTRAINT DisciplinePrimary PRIMARY KEY,
+NameOfDiscipline VARCHAR(35) NOT NULL
+	CONSTRAINT DisciplinesNamesUnique UNIQUE,
+TypeOfControl VARCHAR (35) NOT NULL,
+TotalHours INT NOT NULL
+);
+
+CREATE TABLE StudentGroups
+(IDStudentGroups INT IDENTITY
+	CONSTRAINT StudentGroupPrimary PRIMARY KEY,
+NameOfGroup VARCHAR(35) NOT NULL
+	CONSTRAINT GroupNamesUnique UNIQUE,
+Course INT NOT NULL,
+Semester INT NOT NULL
+);
+
+CREATE TABLE Students
+(IDStudents INT IDENTITY
+	CONSTRAINT StudentsPrimary PRIMARY KEY,
+Names VARCHAR(50) NOT NULL,
+IDStudentGroups INT NOT NULL,
+Sex VARCHAR(5) NOT NULL,
+DateOfBirth date NOT NULL,
+Adress VARCHAR(50) NOT NULL,
+	CONSTRAINT StudCharUnique UNIQUE (Names, Sex, DateOfBirth, Adress),
+	CONSTRAINT StudGroupForeign FOREIGN KEY (IDStudentGroups) REFERENCES
+StudentGroups (IDStudentGroups) ON DELETE CASCADE
+);
+
+CREATE TABLE StudentSuccess
+(IDStudentSuccess INT IDENTITY
+	CONSTRAINT StudensSuccessPrimary PRIMARY KEY,
+IDDiscipline INT NOT NULL,
+IDStudents INT NOT NULL,
+Mark INT NOT NULL,
+	CONSTRAINT StudSuccessUnique UNIQUE (IDDiscipline, IDStudents, Mark),
+	CONSTRAINT StudDisciplinesForeign FOREIGN KEY (IDDiscipline) REFERENCES
+Disciplines(IDDiscipline) ON DELETE CASCADE,
+	CONSTRAINT StudStudentsForeign FOREIGN KEY (IDStudents) REFERENCES
+Students(IDStudents) ON DELETE CASCADE
+);
+----------------------------------------------------------------------------------lab1----------------------------------------------------------------------------
+--INSERT INTO ....
+--	VALUES('....', '....', '....');
+----------------------------------------------------------------------------------lab3----------------------------------------------------------------------------
 SELECT Names ÔÈÎ, NameOfDiscipline Ïðåäìåò, TypeOfControl Êîíòðîëü, TotalHours Êîëâî×àñîâ, Mark Óñïåøíîñòü
 	FROM StudentSuccess S
 		JOIN Disciplines D ON S.IDDiscipline = D.IDDiscipline
